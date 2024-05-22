@@ -1,7 +1,7 @@
 use crate::types::{
     AssertionObject, AttestationObject, AttestationStatement, AuthenticatorData, ClientData,
 };
-use base64ct::{Base64, Base64UrlUnpadded, Encoding};
+use base64ct::{Base64, Base64Unpadded, Base64Url, Base64UrlUnpadded, Encoding};
 use serde_json;
 
 use serde_cbor::{from_slice, Value};
@@ -20,7 +20,8 @@ pub fn b64_to_pem(b64: &str) -> String {
 
 // Decode base64 string into assertion object.
 pub fn decode_attestation(encoded: String) -> Result<AttestationObject, serde_json::Error> {
-    let decoded = Base64UrlUnpadded::decode_vec(&encoded).expect("decoding error");
+    // TODO: Different base64decodings... sometimes url safe, sometimes not.
+    let decoded = Base64Unpadded::decode_vec(&encoded).expect("decoding error");
     let cbor: Value = from_slice(&decoded).expect("decoding error");
     let json_str = serde_json::to_string(&cbor).expect("decoding error");
     let attestation: serde_json::Value = serde_json::from_str(&json_str).expect("decoding error");
