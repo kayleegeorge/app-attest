@@ -95,6 +95,12 @@ pub fn validate_decoded_assertion(
     )
 }
 
+// Decode base64 string into bytes.
+pub fn decode_base64_to_bytes(encoded: String) -> Vec<u8> {
+    let decoded = utils::decode_base64_to_bytes(&encoded);
+    decoded
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
