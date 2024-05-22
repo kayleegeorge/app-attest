@@ -20,7 +20,7 @@ pub fn b64_to_pem(b64: &str) -> String {
 
 // Decode base64 string into assertion object.
 pub fn decode_attestation(encoded: String) -> Result<AttestationObject, serde_json::Error> {
-    let decoded = Base64UrlUnpadded::decode_vec(&encoded).unwrap();
+    let decoded = Base64UrlUnpadded::decode_vec(&encoded).expect("decoding error");
     let cbor: Value = from_slice(&decoded).expect("decoding error");
     let json_str = serde_json::to_string(&cbor).expect("decoding error");
     let attestation: serde_json::Value = serde_json::from_str(&json_str).expect("decoding error");
