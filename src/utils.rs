@@ -20,8 +20,12 @@ pub fn b64_to_pem(b64: &str) -> String {
 
 // Decode base64 string into assertion object.
 pub fn decode_attestation(encoded: String) -> Result<AttestationObject, serde_json::Error> {
-    // TODO: Different base64decodings... sometimes url safe, sometimes not.
-    let decoded = Base64Unpadded::decode_vec(&encoded).expect("decoding error");
+    // Somtimes attestation is padded with '=' and sometimes not.
+    let decoded = if encoded.ends_with("=") {
+        Base64::decode_vec(&encoded).expect("decoding error")
+    } else {
+        Base64Unpadded::decode_vec(&encoded).expect("decoding error")
+    };
     let cbor: Value = from_slice(&decoded).expect("decoding error");
     let json_str = serde_json::to_string(&cbor).expect("decoding error");
     let attestation: serde_json::Value = serde_json::from_str(&json_str).expect("decoding error");
@@ -64,7 +68,11 @@ pub fn decode_attestation(encoded: String) -> Result<AttestationObject, serde_js
 
 // Decode base64 string into assertion object.
 pub fn decode_assertion(encoded: String) -> Result<AssertionObject, serde_json::Error> {
-    let decoded = Base64UrlUnpadded::decode_vec(&encoded).expect("decoding error");
+    let decoded = if encoded.ends_with("=") {
+        Base64::decode_vec(&encoded).expect("decoding error")
+    } else {
+        Base64Unpadded::decode_vec(&encoded).expect("decoding error")
+    };
     let cbor: Value = from_slice(&decoded).expect("decoding error");
     let json_str = serde_json::to_string(&cbor).expect("decoding error");
     let assertion: AssertionObject = serde_json::from_str(&json_str).expect("decoding error");
