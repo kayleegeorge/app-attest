@@ -134,17 +134,20 @@ pub fn validate_attestation(
                         0x00, 0x00, 0x00, 0x00,
                     ]
                     || aaguid.as_slice()
-                        != [
+                        != &[
                             97, 112, 112, 97, 116, 116, 101, 115, 116, 0, 0, 0, 0, 0, 0, 0,
                         ])
             {
                 println!("aaguid: {:?}", aaguid.as_slice());
                 panic!("AAGUID mismatch (prod).");
-            } else if aaguid.as_slice()
-                != &[
-                    0x61, 0x70, 0x70, 0x61, 0x74, 0x74, 0x65, 0x73, 0x74, 0x64, 0x65, 0x76, 0x65,
-                    0x6c, 0x6f, 0x70,
-                ]
+            }
+
+            if !production
+                && aaguid.as_slice()
+                    != &[
+                        0x61, 0x70, 0x70, 0x61, 0x74, 0x74, 0x65, 0x73, 0x74, 0x64, 0x65, 0x76,
+                        0x65, 0x6c, 0x6f, 0x70,
+                    ]
             {
                 println!("aaguid: {:?}", aaguid.as_slice());
                 panic!("AAGUID mismatch (dev).");
