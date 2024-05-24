@@ -141,6 +141,7 @@ pub fn validate_attestation(
                     0x6c, 0x6f, 0x70,
                 ]
             {
+                println!("aaguid: {:?}", aaguid.as_slice());
                 panic!("AAGUID mismatch (dev).");
             }
         }
